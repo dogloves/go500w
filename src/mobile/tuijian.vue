@@ -83,6 +83,15 @@ const unlikeObj = {
   32: [33, 28],
   33: [18, 23],
 }
+const lastList = [6, 7, 18, 20, 27, 29]
+const getResult = () => {
+  let tem = {}
+  lastList.forEach((item) => {
+    likeObj[item].forEach((i) => (tem[i] = tem[i] ? tem[i] + 1 : 1))
+    unlikeObj[item].forEach((i) => (tem[i] = tem[i] ? tem[i] - 1 : 1))
+  })
+  resultList.value = Object.keys(tem).sort((a, b) => tem[b] - tem[a])
+}
 </script>
 <style scoped lang="scss">
 .container {
