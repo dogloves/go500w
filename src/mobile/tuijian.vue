@@ -2,17 +2,22 @@
   <div class="container">
     <p>红球推荐胆码</p>
     <div class="result-box">
-      <div class="rusult-item" @click="selThisResult(item)" v-for="item in redList" :key="item">{{ item }}</div>
+      <div class="rusult-item" v-for="item in resultList" :key="item">{{ item }}</div>
     </div>
     <p>红球推荐杀号</p>
     <div class="result-box">
-      <div class="rusult-item" @click="selThisResult(item)" v-for="item in redList" :key="item">{{ item }}</div>
+      <div class="rusult-item" v-for="item in redList" :key="item">{{ item }}</div>
     </div>
   </div>
 </template>
 
 <script setup>
-const resultList = ref()
+import { onMounted } from 'vue'
+
+const resultList = ref({
+  dan: [],
+  kill: [],
+})
 const likeObj = {
   1: [20, 30, 22],
   2: [14, 17],
@@ -85,13 +90,34 @@ const unlikeObj = {
 }
 const lastList = [6, 7, 18, 20, 27, 29]
 const getResult = () => {
+  let tuijianList = []
+  let shaList = []
   let tem = {}
   lastList.forEach((item) => {
     likeObj[item].forEach((i) => (tem[i] = tem[i] ? tem[i] + 1 : 1))
     unlikeObj[item].forEach((i) => (tem[i] = tem[i] ? tem[i] - 1 : 1))
   })
-  resultList.value = Object.keys(tem).sort((a, b) => tem[b] - tem[a])
+  let arr = Object.keys(tem).sort((a, b) => tem[b] - tem[a])
+  arr.forEach((item) => {
+    if (tem[item] > 0) {
+      let obj = {
+        num: item,
+        count: tem[item],
+      }
+      tuijianList.push(obj)
+    }
+    if (tem[item] < 0) {
+      let obj = {
+        num: item,
+        count: -tem[item],
+      }
+      shaList.push(obj)
+    }
+  })
 }
+onMounted(() => {
+  getResult()
+})
 </script>
 <style scoped lang="scss">
 .container {
