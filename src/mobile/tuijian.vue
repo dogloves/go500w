@@ -2,11 +2,17 @@
   <div class="container">
     <p>红球推荐胆码</p>
     <div class="result-box">
-      <div class="rusult-item" v-for="item in resultList" :key="item">{{ item }}</div>
+      <div class="rusult-item" v-for="item in resultList.dan" :key="item">
+        <p>{{ item.num }}</p>
+        <van-rate v-model="item.count" readonly color="#3CB371" />
+      </div>
     </div>
     <p>红球推荐杀号</p>
     <div class="result-box">
-      <div class="rusult-item" v-for="item in redList" :key="item">{{ item }}</div>
+      <div class="rusult-item" v-for="item in resultList.kill" :key="item">
+        <p>{{ item.num }}</p>
+        <van-rate v-model="item.count" readonly color="	#C71585" />
+      </div>
     </div>
   </div>
 </template>
@@ -88,6 +94,8 @@ const unlikeObj = {
   32: [33, 28],
   33: [18, 23],
 }
+const hotList = [20, 13, 31, 28, 29, 19]
+const coldList = [30, 12, 14, 26, 32, 2]
 const lastList = [6, 7, 18, 20, 27, 29]
 const getResult = () => {
   let tuijianList = []
@@ -95,7 +103,9 @@ const getResult = () => {
   let tem = {}
   lastList.forEach((item) => {
     likeObj[item].forEach((i) => (tem[i] = tem[i] ? tem[i] + 1 : 1))
-    unlikeObj[item].forEach((i) => (tem[i] = tem[i] ? tem[i] - 1 : 1))
+    unlikeObj[item].forEach((i) => (tem[i] = tem[i] ? tem[i] - 1 : -1))
+    hotList.includes(item) && (tem[item] = tem[item] ? tem[item] + 1 : 1)
+    coldList.includes(item) && (tem[item] = tem[item] ? tem[item] - 1 : -1)
   })
   let arr = Object.keys(tem).sort((a, b) => tem[b] - tem[a])
   arr.forEach((item) => {
@@ -111,9 +121,11 @@ const getResult = () => {
         num: item,
         count: -tem[item],
       }
-      shaList.push(obj)
+      shaList.unshift(obj)
     }
   })
+  resultList.value.dan = tuijianList
+  resultList.value.kill = shaList
 }
 onMounted(() => {
   getResult()
@@ -129,7 +141,6 @@ onMounted(() => {
   .checkbox-box {
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
     .check-item {
       width: 50px;
@@ -156,6 +167,7 @@ onMounted(() => {
     height: 22px;
     text-align: center;
     color: var(--el-text-color-regular);
+    display: flex;
   }
 }
 .mrg-l-20 {
