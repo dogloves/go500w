@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "serve": "node serve/index.js",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -15,7 +16,10 @@
     "unplugin-auto-import": "^0.11.2",
     "vant": "^3.6.4",
     "vue": "^3.2.37",
-    "vue-router": "^4.1.5"
+    "vue-router": "^4.1.5",
+    "@tensorflow/tfjs": "^3.20.0",
+    "cheerio": "^1.0.0-rc.12",
+    "request": "^2.88.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",
